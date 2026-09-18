@@ -1,0 +1,436 @@
+:root {
+  --cell: 16px;
+  --border: #dbe2ea;
+  --text: #1e293b;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --issue: #e5484d;
+  --select: #7c3aed;
+  --panel-bg: #ffffff;
+  --app-bg: #f3f5f8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    'PingFang SC',
+    'Hiragino Sans GB',
+    'Microsoft YaHei',
+    sans-serif;
+  background: var(--app-bg);
+  color: var(--text);
+}
+
+.app {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 16px 20px 48px;
+}
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.topbar h1 {
+  font-size: 20px;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ---------- 布局 ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 12px;
+  margin-top: 14px;
+  align-items: start;
+}
+
+.draft-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'threading tieup'
+    'drawdown treadling';
+  gap: 12px;
+  align-items: start;
+}
+
+.q-threading {
+  grid-area: threading;
+}
+.q-tieup {
+  grid-area: tieup;
+}
+.q-drawdown {
+  grid-area: drawdown;
+}
+.q-treadling {
+  grid-area: treadling;
+}
+
+.quadrant,
+.panel,
+.preview-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.quadrant h2,
+.panel h2,
+.preview-section h2 {
+  font-size: 14px;
+  margin: 0 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quadrant h2 span,
+.panel-sub {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preview-section {
+  margin-top: 12px;
+}
+
+/* ---------- 编辑网格（穿综 / 提综 / 踏纹） ---------- */
+.editor-grid {
+  display: grid;
+  gap: 2px;
+  width: max-content;
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.cell:hover {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.cell.filled {
+  background: #334155;
+  border-color: #334155;
+}
+
+.cell.filled:hover {
+  background: #1e293b;
+}
+
+.axis {
+  font-size: 8px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--cell);
+  user-select: none;
+}
+
+.axis-row {
+  width: 26px;
+  justify-content: flex-end;
+  padding-right: 5px;
+}
+
+.axis-col {
+  width: var(--cell);
+}
+
+.axis-hl {
+  color: var(--select);
+  font-weight: 700;
+}
+
+@keyframes hl-pulse {
+  0%,
+  100% {
+    box-shadow: inset 0 0 0 2px var(--select);
+  }
+  50% {
+    box-shadow: inset 0 0 0 3px var(--select);
+    background: #ede9fe;
+  }
+}
+
+.cell.hl {
+  animation: hl-pulse 0.9s ease-in-out infinite;
+}
+
+/* ---------- 组织图画布 ---------- */
+.canvas-scroll {
+  overflow: auto;
+  max-width: 100%;
+  max-height: 62vh;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.drawdown-canvas {
+  display: block;
+  cursor: crosshair;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: -1px;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+}
+
+.swatch-issue {
+  border: 2px solid var(--issue);
+  background: transparent;
+  width: 8px;
+  height: 8px;
+}
+
+/* ---------- 侧栏面板 ---------- */
+.field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.field label {
+  width: 60px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.field input[type='number'] {
+  width: 64px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.field input[type='color'] {
+  width: 40px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.unit {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 10px 0 0;
+  line-height: 1.6;
+}
+
+.ok {
+  color: #15803d;
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+/* ---------- 浮线问题列表 ---------- */
+.issue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.issue {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  align-items: baseline;
+  line-height: 1.5;
+}
+
+.issue:hover {
+  border-color: var(--issue);
+}
+
+.issue.active {
+  border-color: var(--select);
+  background: #f5f3ff;
+}
+
+.issue-dir {
+  color: var(--issue);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ---------- 按钮 ---------- */
+button {
+  font: inherit;
+}
+
+.btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+/* ---------- 试织预演 ---------- */
+.preview-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.speed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.speed select {
+  font: inherit;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.preview-status {
+  font-size: 13px;
+  color: var(--text);
+  margin-left: auto;
+}
+
+.progress {
+  height: 6px;
+  background: #e6ebf1;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress > div {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.15s ease;
+}
+
+.preview-scroll {
+  max-height: 440px;
+}
+
+.preview-scroll canvas {
+  display: block;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .draft-area {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'threading'
+      'tieup'
+      'drawdown'
+      'treadling';
+  }
+}
